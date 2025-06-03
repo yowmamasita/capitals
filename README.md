@@ -56,7 +56,9 @@ capitals/
 
 ### Available Scripts
 
-- `npm start` - Starts the development server on port 3000
+- `npm start` - Starts the development server on port 3000 and opens browser
+- `npm run dev` - Same as npm start
+- `npm run serve` - Starts the server without opening browser
 - `npm install` - Installs project dependencies
 
 ### Keyboard Shortcuts
