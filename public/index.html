@@ -32,29 +32,63 @@
             <div class="start-screen" id="start-screen">
                 <h2>Willkommen zum Europa Hauptstädte Quiz!</h2>
                 <p>Teste dein Wissen über die Hauptstädte Europas</p>
+                
+                <div class="mode-selection">
+                    <h3>Wähle einen Modus:</h3>
+                    <div class="mode-buttons">
+                        <button class="mode-btn active" data-mode="classic">
+                            <div class="mode-icon">🎴</div>
+                            <div class="mode-name">Klassisch</div>
+                            <div class="mode-desc">Karteikarten mit Timer</div>
+                        </button>
+                        <button class="mode-btn" data-mode="multiple">
+                            <div class="mode-icon">📝</div>
+                            <div class="mode-name">Multiple Choice</div>
+                            <div class="mode-desc">Wähle die richtige Antwort</div>
+                        </button>
+                    </div>
+                </div>
+                
                 <button id="start-quiz" class="btn btn-primary btn-large">Quiz starten</button>
             </div>
 
             <div class="quiz-content" id="quiz-content" style="display: none;">
-                <div class="flash-card" id="flash-card">
-                    <div class="card-content">
-                        <div class="card-front">
-                            <h2 id="country-name">Land</h2>
-                            <div class="timer" id="timer">5</div>
+                <!-- Classic Mode -->
+                <div class="classic-mode" id="classic-mode">
+                    <div class="flash-card" id="flash-card">
+                        <div class="card-content">
+                            <div class="card-front">
+                                <h2 id="country-name">Land</h2>
+                                <div class="timer" id="timer">5</div>
+                            </div>
+                            <div class="card-back">
+                                <h2 id="capital-name">Hauptstadt</h2>
+                            </div>
                         </div>
-                        <div class="card-back">
-                            <h2 id="capital-name">Hauptstadt</h2>
+                    </div>
+
+                    <div class="controls">
+                        <button id="show-answer" class="btn btn-primary">Antwort zeigen</button>
+                        <div class="answer-buttons" id="answer-buttons" style="display: none;">
+                            <button id="correct-btn" class="btn btn-success">✓ Richtig</button>
+                            <button id="wrong-btn" class="btn btn-danger">✗ Falsch</button>
                         </div>
+                        <button id="next-card" class="btn btn-secondary" style="display: none;">Nächste Karte</button>
                     </div>
                 </div>
 
-                <div class="controls">
-                    <button id="show-answer" class="btn btn-primary">Antwort zeigen</button>
-                    <div class="answer-buttons" id="answer-buttons" style="display: none;">
-                        <button id="correct-btn" class="btn btn-success">✓ Richtig</button>
-                        <button id="wrong-btn" class="btn btn-danger">✗ Falsch</button>
+                <!-- Multiple Choice Mode -->
+                <div class="multiple-choice-mode" id="multiple-choice-mode" style="display: none;">
+                    <div class="question-card">
+                        <h2 id="mc-question">Was ist die Hauptstadt von <span id="mc-country">Land</span>?</h2>
+                        <div class="timer" id="mc-timer">10</div>
                     </div>
-                    <button id="next-card" class="btn btn-secondary" style="display: none;">Nächste Karte</button>
+                    
+                    <div class="choices-grid" id="choices-grid">
+                        <!-- Choices will be dynamically added -->
+                    </div>
+                    
+                    <button id="mc-next" class="btn btn-secondary" style="display: none;">Nächste Frage</button>
                 </div>
             </div>
         </div>

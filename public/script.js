@@ -48,6 +48,10 @@ let timeLeft = 7;
 let isShowingAnswer = false;
 let shuffledCapitals = [];
 let timerDuration = 7; // Default to "Schnell"
+let quizMode = 'classic'; // 'classic' or 'multiple'
+let mcTimer;
+let mcTimeLeft = 10;
+let currentChoices = [];
 
 const flashCard = document.getElementById('flash-card');
 const countryName = document.getElementById('country-name');
@@ -66,6 +70,12 @@ const resetBtn = document.getElementById('reset-btn');
 const startBtn = document.getElementById('start-quiz');
 const startScreen = document.getElementById('start-screen');
 const quizContent = document.getElementById('quiz-content');
+const classicMode = document.getElementById('classic-mode');
+const multipleChoiceMode = document.getElementById('multiple-choice-mode');
+const mcCountry = document.getElementById('mc-country');
+const mcTimerDisplay = document.getElementById('mc-timer');
+const choicesGrid = document.getElementById('choices-grid');
+const mcNextBtn = document.getElementById('mc-next');
 
 function shuffleArray(array) {
     const newArray = [...array];
@@ -84,7 +94,16 @@ function initializeQuiz() {
     updateScores();
     startScreen.style.display = 'none';
     quizContent.style.display = 'block';
-    showNextCard();
+    
+    if (quizMode === 'classic') {
+        classicMode.style.display = 'block';
+        multipleChoiceMode.style.display = 'none';
+        showNextCard();
+    } else {
+        classicMode.style.display = 'none';
+        multipleChoiceMode.style.display = 'block';
+        showNextMultipleChoice();
+    }
 }
 
 function startTimer() {
@@ -182,6 +201,7 @@ nextCardBtn.addEventListener('click', () => {
 resetBtn.addEventListener('click', () => {
     if (confirm('Möchten Sie das Quiz wirklich zurücksetzen?')) {
         clearInterval(timer);
+        clearInterval(mcTimer);
         startScreen.style.display = 'block';
         quizContent.style.display = 'none';
         correctCount = 0;
@@ -193,6 +213,15 @@ resetBtn.addEventListener('click', () => {
 
 startBtn.addEventListener('click', () => {
     initializeQuiz();
+});
+
+// Mode selection
+document.querySelectorAll('.mode-btn').forEach(button => {
+    button.addEventListener('click', (e) => {
+        document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
+        e.currentTarget.classList.add('active');
+        quizMode = e.currentTarget.dataset.mode;
+    });
 });
 
 document.addEventListener('keydown', (e) => {
@@ -219,4 +248,90 @@ document.querySelectorAll('.timer-option').forEach(button => {
         // Update timer duration
         timerDuration = parseInt(e.target.dataset.speed);
     });
+});
+
+// Multiple Choice Functions
+function getRandomCapitals(exclude, count) {
+    const available = capitals.filter(c => c.capital !== exclude);
+    const shuffled = shuffleArray(available);
+    return shuffled.slice(0, count).map(c => c.capital);
+}
+
+function showNextMultipleChoice() {
+    if (currentCardIndex >= shuffledCapitals.length) {
+        alert(`Quiz beendet!\n\nRichtig: ${correctCount}\nFalsch: ${wrongCount}\nGesamt: ${correctCount + wrongCount}`);
+        initializeQuiz();
+        return;
+    }
+    
+    const currentCard = shuffledCapitals[currentCardIndex];
+    mcCountry.textContent = currentCard.country;
+    
+    // Generate choices
+    const wrongChoices = getRandomCapitals(currentCard.capital, 3);
+    currentChoices = [currentCard.capital, ...wrongChoices];
+    currentChoices = shuffleArray(currentChoices);
+    
+    // Clear and populate choices grid
+    choicesGrid.innerHTML = '';
+    currentChoices.forEach((choice, index) => {
+        const button = document.createElement('button');
+        button.className = 'choice-btn';
+        button.textContent = choice;
+        button.onclick = () => handleMultipleChoice(choice, currentCard.capital);
+        choicesGrid.appendChild(button);
+    });
+    
+    mcNextBtn.style.display = 'none';
+    updateProgress();
+    startMCTimer();
+}
+
+function startMCTimer() {
+    mcTimeLeft = 10;
+    mcTimerDisplay.textContent = mcTimeLeft;
+    mcTimerDisplay.classList.remove('warning');
+    
+    mcTimer = setInterval(() => {
+        mcTimeLeft--;
+        mcTimerDisplay.textContent = mcTimeLeft;
+        
+        if (mcTimeLeft <= 3) {
+            mcTimerDisplay.classList.add('warning');
+        }
+        
+        if (mcTimeLeft === 0) {
+            clearInterval(mcTimer);
+            handleMultipleChoice(null, shuffledCapitals[currentCardIndex].capital);
+        }
+    }, 1000);
+}
+
+function handleMultipleChoice(selected, correct) {
+    clearInterval(mcTimer);
+    
+    // Show correct/wrong answers
+    const buttons = choicesGrid.querySelectorAll('.choice-btn');
+    buttons.forEach(btn => {
+        btn.disabled = true;
+        if (btn.textContent === correct) {
+            btn.classList.add('correct');
+        } else if (btn.textContent === selected) {
+            btn.classList.add('wrong');
+        }
+    });
+    
+    if (selected === correct) {
+        correctCount++;
+    } else {
+        wrongCount++;
+    }
+    
+    updateScores();
+    mcNextBtn.style.display = 'block';
+}
+
+mcNextBtn.addEventListener('click', () => {
+    currentCardIndex++;
+    showNextMultipleChoice();
 });
