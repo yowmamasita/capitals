@@ -52,6 +52,7 @@ let quizMode = 'classic'; // 'classic' or 'multiple'
 let mcTimerInterval;
 let mcTimeLeft = 10;
 let currentChoices = [];
+const QUIZ_LENGTH = 10; // Limit quiz to 10 questions
 
 const flashCard = document.getElementById('flash-card');
 const countryName = document.getElementById('country-name');
@@ -87,7 +88,7 @@ function shuffleArray(array) {
 }
 
 function initializeQuiz() {
-    shuffledCapitals = shuffleArray(capitals);
+    shuffledCapitals = shuffleArray(capitals).slice(0, QUIZ_LENGTH); // Take only first 10 questions
     currentCardIndex = 0;
     correctCount = 0;
     wrongCount = 0;
@@ -136,8 +137,7 @@ function showAnswer() {
 
 function showNextCard() {
     if (currentCardIndex >= shuffledCapitals.length) {
-        alert(`Quiz beendet!\n\nRichtig: ${correctCount}\nFalsch: ${wrongCount}\nGesamt: ${correctCount + wrongCount}`);
-        initializeQuiz();
+        showQuizComplete();
         return;
     }
     
@@ -285,8 +285,7 @@ function getRandomCapitals(exclude, count) {
 
 function showNextMultipleChoice() {
     if (currentCardIndex >= shuffledCapitals.length) {
-        alert(`Quiz beendet!\n\nRichtig: ${correctCount}\nFalsch: ${wrongCount}\nGesamt: ${correctCount + wrongCount}`);
-        initializeQuiz();
+        showQuizComplete();
         return;
     }
     
@@ -361,3 +360,32 @@ mcNextBtn.addEventListener('click', () => {
     currentCardIndex++;
     showNextMultipleChoice();
 });
+
+// Function to show quiz completion
+function showQuizComplete() {
+    clearInterval(timer);
+    clearInterval(mcTimerInterval);
+    
+    const percentage = Math.round((correctCount / QUIZ_LENGTH) * 100);
+    let message = `Quiz beendet!\n\nRichtig: ${correctCount} von ${QUIZ_LENGTH}\nFalsch: ${wrongCount}\nErfolgsquote: ${percentage}%`;
+    
+    if (percentage >= 90) {
+        message += '\n\nAusgezeichnet! 🌟';
+    } else if (percentage >= 70) {
+        message += '\n\nSehr gut! 👏';
+    } else if (percentage >= 50) {
+        message += '\n\nGut gemacht! 👍';
+    } else {
+        message += '\n\nWeiter üben! 💪';
+    }
+    
+    alert(message);
+    
+    // Reset to start screen
+    startScreen.style.display = 'block';
+    quizContent.style.display = 'none';
+    correctCount = 0;
+    wrongCount = 0;
+    updateScores();
+    progressBar.style.width = '0%';
+}
