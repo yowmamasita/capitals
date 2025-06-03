@@ -221,14 +221,27 @@ document.querySelectorAll('.mode-btn').forEach(button => {
         e.preventDefault();
         e.stopPropagation();
         
-        // Remove active class from all buttons
-        document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
+        // Don't do anything if already selected
+        if (e.currentTarget.classList.contains('active')) return;
+        
+        // Remove active class from all buttons with animation
+        document.querySelectorAll('.mode-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
         
         // Add active class to clicked button
-        e.currentTarget.classList.add('active');
+        setTimeout(() => {
+            e.currentTarget.classList.add('active');
+        }, 50);
         
         // Update quiz mode
         quizMode = e.currentTarget.dataset.mode;
+        
+        // Visual feedback
+        e.currentTarget.style.transform = 'scale(0.95)';
+        setTimeout(() => {
+            e.currentTarget.style.transform = '';
+        }, 150);
     });
 });
 
