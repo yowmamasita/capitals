@@ -261,6 +261,28 @@ h1 {
     color: white;
 }
 
+.start-screen {
+    text-align: center;
+    padding: 60px 20px;
+}
+
+.start-screen h2 {
+    color: #333;
+    font-size: 2em;
+    margin-bottom: 20px;
+}
+
+.start-screen p {
+    color: #666;
+    font-size: 1.2em;
+    margin-bottom: 40px;
+}
+
+.btn-large {
+    padding: 16px 40px;
+    font-size: 1.3em;
+}
+
 @media (max-width: 600px) {
     .container {
         padding: 20px;

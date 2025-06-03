@@ -29,25 +29,33 @@
         </div>
 
         <div class="quiz-area">
-            <div class="flash-card" id="flash-card">
-                <div class="card-content">
-                    <div class="card-front">
-                        <h2 id="country-name">Land</h2>
-                        <div class="timer" id="timer">5</div>
-                    </div>
-                    <div class="card-back">
-                        <h2 id="capital-name">Hauptstadt</h2>
-                    </div>
-                </div>
+            <div class="start-screen" id="start-screen">
+                <h2>Willkommen zum Europa Hauptstädte Quiz!</h2>
+                <p>Teste dein Wissen über die Hauptstädte Europas</p>
+                <button id="start-quiz" class="btn btn-primary btn-large">Quiz starten</button>
             </div>
 
-            <div class="controls">
-                <button id="show-answer" class="btn btn-primary">Antwort zeigen</button>
-                <div class="answer-buttons" id="answer-buttons" style="display: none;">
-                    <button id="correct-btn" class="btn btn-success">✓ Richtig</button>
-                    <button id="wrong-btn" class="btn btn-danger">✗ Falsch</button>
+            <div class="quiz-content" id="quiz-content" style="display: none;">
+                <div class="flash-card" id="flash-card">
+                    <div class="card-content">
+                        <div class="card-front">
+                            <h2 id="country-name">Land</h2>
+                            <div class="timer" id="timer">5</div>
+                        </div>
+                        <div class="card-back">
+                            <h2 id="capital-name">Hauptstadt</h2>
+                        </div>
+                    </div>
                 </div>
-                <button id="next-card" class="btn btn-secondary" style="display: none;">Nächste Karte</button>
+
+                <div class="controls">
+                    <button id="show-answer" class="btn btn-primary">Antwort zeigen</button>
+                    <div class="answer-buttons" id="answer-buttons" style="display: none;">
+                        <button id="correct-btn" class="btn btn-success">✓ Richtig</button>
+                        <button id="wrong-btn" class="btn btn-danger">✗ Falsch</button>
+                    </div>
+                    <button id="next-card" class="btn btn-secondary" style="display: none;">Nächste Karte</button>
+                </div>
             </div>
         </div>
 

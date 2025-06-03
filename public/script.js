@@ -63,6 +63,9 @@ const wrongScore = document.getElementById('wrong-score');
 const totalScore = document.getElementById('total-score');
 const progressBar = document.getElementById('progress-bar');
 const resetBtn = document.getElementById('reset-btn');
+const startBtn = document.getElementById('start-quiz');
+const startScreen = document.getElementById('start-screen');
+const quizContent = document.getElementById('quiz-content');
 
 function shuffleArray(array) {
     const newArray = [...array];
@@ -79,6 +82,8 @@ function initializeQuiz() {
     correctCount = 0;
     wrongCount = 0;
     updateScores();
+    startScreen.style.display = 'none';
+    quizContent.style.display = 'block';
     showNextCard();
 }
 
@@ -176,8 +181,18 @@ nextCardBtn.addEventListener('click', () => {
 
 resetBtn.addEventListener('click', () => {
     if (confirm('Möchten Sie das Quiz wirklich zurücksetzen?')) {
-        initializeQuiz();
+        clearInterval(timer);
+        startScreen.style.display = 'block';
+        quizContent.style.display = 'none';
+        correctCount = 0;
+        wrongCount = 0;
+        updateScores();
+        progressBar.style.width = '0%';
     }
+});
+
+startBtn.addEventListener('click', () => {
+    initializeQuiz();
 });
 
 document.addEventListener('keydown', (e) => {
@@ -205,5 +220,3 @@ document.querySelectorAll('.timer-option').forEach(button => {
         timerDuration = parseInt(e.target.dataset.speed);
     });
 });
-
-initializeQuiz();
