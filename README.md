@@ -38,7 +38,7 @@ npm start
 
 4. Open your browser and navigate to:
 ```
-http://localhost:3000
+http://localhost:8080
 ```
 
 ### Project Structure
@@ -56,7 +56,7 @@ capitals/
 
 ### Available Scripts
 
-- `npm start` - Starts the development server on port 3000 and opens browser
+- `npm start` - Starts the development server on port 8080 and opens browser
 - `npm run dev` - Same as npm start
 - `npm run serve` - Starts the server without opening browser
 - `npm install` - Installs project dependencies
