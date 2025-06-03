@@ -350,6 +350,7 @@ h1 {
 .mode-icon {
     font-size: 2.5em;
     margin-bottom: 10px;
+    pointer-events: none;
 }
 
 .mode-name {
@@ -357,11 +358,13 @@ h1 {
     font-weight: bold;
     color: #333;
     margin-bottom: 5px;
+    pointer-events: none;
 }
 
 .mode-desc {
     font-size: 0.9em;
     color: #666;
+    pointer-events: none;
 }
 
 /* Multiple Choice Mode */
