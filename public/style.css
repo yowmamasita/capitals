@@ -332,6 +332,8 @@ h1 {
     transition: all 0.3s ease;
     text-align: center;
     width: 200px;
+    pointer-events: auto;
+    z-index: 1;
 }
 
 .mode-btn:hover {

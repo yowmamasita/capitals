@@ -49,7 +49,7 @@ let isShowingAnswer = false;
 let shuffledCapitals = [];
 let timerDuration = 7; // Default to "Schnell"
 let quizMode = 'classic'; // 'classic' or 'multiple'
-let mcTimer;
+let mcTimerInterval;
 let mcTimeLeft = 10;
 let currentChoices = [];
 
@@ -201,7 +201,7 @@ nextCardBtn.addEventListener('click', () => {
 resetBtn.addEventListener('click', () => {
     if (confirm('Möchten Sie das Quiz wirklich zurücksetzen?')) {
         clearInterval(timer);
-        clearInterval(mcTimer);
+        clearInterval(mcTimerInterval);
         startScreen.style.display = 'block';
         quizContent.style.display = 'none';
         correctCount = 0;
@@ -218,23 +218,36 @@ startBtn.addEventListener('click', () => {
 // Mode selection
 document.querySelectorAll('.mode-btn').forEach(button => {
     button.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        // Remove active class from all buttons
         document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
+        
+        // Add active class to clicked button
         e.currentTarget.classList.add('active');
+        
+        // Update quiz mode
         quizMode = e.currentTarget.dataset.mode;
     });
 });
 
 document.addEventListener('keydown', (e) => {
-    if (e.key === ' ' && !isShowingAnswer) {
-        e.preventDefault();
-        showAnswer();
-    } else if (e.key === 'ArrowRight' && nextCardBtn.style.display !== 'none') {
-        currentCardIndex++;
-        showNextCard();
-    } else if (e.key === 'ArrowUp' && answerButtons.style.display !== 'none') {
-        handleAnswer(true);
-    } else if (e.key === 'ArrowDown' && answerButtons.style.display !== 'none') {
-        handleAnswer(false);
+    // Only handle keyboard shortcuts when quiz is active
+    if (quizContent.style.display === 'none') return;
+    
+    if (quizMode === 'classic') {
+        if (e.key === ' ' && !isShowingAnswer) {
+            e.preventDefault();
+            showAnswer();
+        } else if (e.key === 'ArrowRight' && nextCardBtn.style.display !== 'none') {
+            currentCardIndex++;
+            showNextCard();
+        } else if (e.key === 'ArrowUp' && answerButtons.style.display !== 'none') {
+            handleAnswer(true);
+        } else if (e.key === 'ArrowDown' && answerButtons.style.display !== 'none') {
+            handleAnswer(false);
+        }
     }
 });
 
@@ -292,7 +305,7 @@ function startMCTimer() {
     mcTimerDisplay.textContent = mcTimeLeft;
     mcTimerDisplay.classList.remove('warning');
     
-    mcTimer = setInterval(() => {
+    mcTimerInterval = setInterval(() => {
         mcTimeLeft--;
         mcTimerDisplay.textContent = mcTimeLeft;
         
@@ -301,14 +314,14 @@ function startMCTimer() {
         }
         
         if (mcTimeLeft === 0) {
-            clearInterval(mcTimer);
+            clearInterval(mcTimerInterval);
             handleMultipleChoice(null, shuffledCapitals[currentCardIndex].capital);
         }
     }, 1000);
 }
 
 function handleMultipleChoice(selected, correct) {
-    clearInterval(mcTimer);
+    clearInterval(mcTimerInterval);
     
     // Show correct/wrong answers
     const buttons = choicesGrid.querySelectorAll('.choice-btn');
