@@ -664,12 +664,9 @@ function showNextShape() {
     shapeSubmitBtn.style.display = 'none';
     shapeNextBtn.style.display = 'none';
     
-    // Display country flag emoji
-    const flagEmoji = currentShapeAnswer.country.split(' ')[0];
+    // Display country map shape
     shapeDisplay.innerHTML = `
-        <div class="shape-placeholder">
-            <span class="shape-flag">${flagEmoji}</span>
-        </div>
+        <img src="maps/${currentShapeAnswer.code}.png" alt="Country shape" class="country-shape">
     `;
     
     // Generate 3 country-capital pairs (including the correct one)

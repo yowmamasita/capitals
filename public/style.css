@@ -674,21 +674,12 @@ h1 {
     margin-bottom: 20px;
 }
 
-.shape-placeholder {
-    text-align: center;
-}
-
-.shape-flag {
-    display: block;
-    font-size: 120px;
-    margin-bottom: 10px;
-}
-
-.shape-name {
-    display: block;
-    font-size: 18px;
-    color: #999;
-    font-style: italic;
+.country-shape {
+    max-width: 200px;
+    max-height: 200px;
+    width: auto;
+    height: auto;
+    filter: invert(1) sepia(1) saturate(5) hue-rotate(220deg);
 }
 
 #shape-timer {
@@ -814,12 +805,9 @@ h1 {
 }
 
 @media (max-width: 600px) {
-    .shape-flag {
-        font-size: 80px;
-    }
-    
-    .shape-name {
-        font-size: 16px;
+    .country-shape {
+        max-width: 150px;
+        max-height: 150px;
     }
     
     .shape-card {
