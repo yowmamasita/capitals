@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Europa Hauptstädte Quiz</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌍</text></svg>">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/djaiss/mapsicon@latest/all.css">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -43,6 +44,11 @@
                             <div class="mode-icon">📝</div>
                             <div class="mode-name">Mehrfachauswahl</div>
                             <div class="mode-desc">Wähle die richtige Antwort</div>
+                        </button>
+                        <button type="button" class="mode-btn" data-mode="shape">
+                            <div class="mode-icon">🗺️</div>
+                            <div class="mode-name">Länderformen</div>
+                            <div class="mode-desc">Erkenne Land und Hauptstadt</div>
                         </button>
                     </div>
                 </div>
@@ -128,6 +134,31 @@
                     </div>
                     
                     <button id="mc-next" class="btn btn-secondary" style="display: none;">Nächste Frage</button>
+                </div>
+
+                <!-- Shape Mode -->
+                <div class="shape-mode" id="shape-mode" style="display: none;">
+                    <div class="shape-card">
+                        <div class="shape-display" id="shape-display">
+                            <!-- Country shape will be displayed here -->
+                        </div>
+                        <div class="timer" id="shape-timer">10</div>
+                    </div>
+                    
+                    <div class="shape-question">
+                        <h3>Welches Land und welche Hauptstadt ist das?</h3>
+                    </div>
+                    
+                    <div class="shape-input-container">
+                        <input type="text" id="country-input" class="shape-input" placeholder="Land eingeben...">
+                        <input type="text" id="capital-input" class="shape-input" placeholder="Hauptstadt eingeben...">
+                        <button id="submit-answer" class="btn btn-primary">Antwort prüfen</button>
+                    </div>
+                    
+                    <div class="shape-feedback" id="shape-feedback" style="display: none;">
+                        <p id="feedback-text"></p>
+                        <button id="shape-next" class="btn btn-secondary">Nächste Frage</button>
+                    </div>
                 </div>
             </div>
         </div>

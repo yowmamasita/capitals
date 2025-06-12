@@ -1,43 +1,43 @@
 const capitals = [
-    { country: "🇮🇸 Island", capital: "Reykjavik" },
-    { country: "🇳🇴 Norwegen", capital: "Oslo" },
-    { country: "🇸🇪 Schweden", capital: "Stockholm" },
-    { country: "🇫🇮 Finnland", capital: "Helsinki" },
-    { country: "🇷🇺 Russland", capital: "Moskau" },
-    { country: "🇩🇰 Dänemark", capital: "Kopenhagen" },
-    { country: "🇩🇪 Deutschland", capital: "Berlin" },
-    { country: "🇵🇱 Polen", capital: "Warschau" },
-    { country: "🇨🇭 Schweiz", capital: "Bern" },
-    { country: "🇦🇹 Österreich", capital: "Wien" },
-    { country: "🇫🇷 Frankreich", capital: "Paris" },
-    { country: "🇮🇪 Irland", capital: "Dublin" },
-    { country: "🇬🇧 Vereinigtes Königreich", capital: "London" },
-    { country: "🇪🇸 Spanien", capital: "Madrid" },
-    { country: "🇵🇹 Portugal", capital: "Lissabon" },
-    { country: "🇮🇹 Italien", capital: "Rom" },
-    { country: "🇪🇪 Estland", capital: "Tallinn" },
-    { country: "🇱🇻 Lettland", capital: "Riga" },
-    { country: "🇱🇹 Litauen", capital: "Vilnius" },
-    { country: "🇧🇾 Weißrussland", capital: "Minsk" },
-    { country: "🇺🇦 Ukraine", capital: "Kyjiw" },
-    { country: "🇨🇿 Tschechien", capital: "Prag" },
-    { country: "🇸🇰 Slowakei", capital: "Bratislava" },
-    { country: "🇭🇺 Ungarn", capital: "Budapest" },
-    { country: "🇷🇴 Rumänien", capital: "Bukarest" },
-    { country: "🇸🇮 Slowenien", capital: "Ljubljana" },
-    { country: "🇭🇷 Kroatien", capital: "Zagreb" },
-    { country: "🇷🇸 Serbien", capital: "Belgrad" },
-    { country: "🇧🇦 Bosnien und Herzegowina", capital: "Sarajevo" },
-    { country: "🇧🇬 Bulgarien", capital: "Sofia" },
-    { country: "🇲🇪 Montenegro", capital: "Podgorica" },
-    { country: "🇦🇱 Albanien", capital: "Tirana" },
-    { country: "🇬🇷 Griechenland", capital: "Athen" },
-    { country: "🇹🇷 Türkei", capital: "Ankara" },
-    { country: "🇲🇩 Moldawien", capital: "Chisinau" },
-    { country: "🇲🇰 Mazedonien", capital: "Skopje" },
-    { country: "🇳🇱 Niederlande", capital: "Amsterdam" },
-    { country: "🇧🇪 Belgien", capital: "Brüssel" },
-    { country: "🇱🇺 Luxemburg", capital: "Luxemburg" }
+    { country: "🇮🇸 Island", capital: "Reykjavik", code: "is" },
+    { country: "🇳🇴 Norwegen", capital: "Oslo", code: "no" },
+    { country: "🇸🇪 Schweden", capital: "Stockholm", code: "se" },
+    { country: "🇫🇮 Finnland", capital: "Helsinki", code: "fi" },
+    { country: "🇷🇺 Russland", capital: "Moskau", code: "ru" },
+    { country: "🇩🇰 Dänemark", capital: "Kopenhagen", code: "dk" },
+    { country: "🇩🇪 Deutschland", capital: "Berlin", code: "de" },
+    { country: "🇵🇱 Polen", capital: "Warschau", code: "pl" },
+    { country: "🇨🇭 Schweiz", capital: "Bern", code: "ch" },
+    { country: "🇦🇹 Österreich", capital: "Wien", code: "at" },
+    { country: "🇫🇷 Frankreich", capital: "Paris", code: "fr" },
+    { country: "🇮🇪 Irland", capital: "Dublin", code: "ie" },
+    { country: "🇬🇧 Vereinigtes Königreich", capital: "London", code: "gb" },
+    { country: "🇪🇸 Spanien", capital: "Madrid", code: "es" },
+    { country: "🇵🇹 Portugal", capital: "Lissabon", code: "pt" },
+    { country: "🇮🇹 Italien", capital: "Rom", code: "it" },
+    { country: "🇪🇪 Estland", capital: "Tallinn", code: "ee" },
+    { country: "🇱🇻 Lettland", capital: "Riga", code: "lv" },
+    { country: "🇱🇹 Litauen", capital: "Vilnius", code: "lt" },
+    { country: "🇧🇾 Weißrussland", capital: "Minsk", code: "by" },
+    { country: "🇺🇦 Ukraine", capital: "Kyjiw", code: "ua" },
+    { country: "🇨🇿 Tschechien", capital: "Prag", code: "cz" },
+    { country: "🇸🇰 Slowakei", capital: "Bratislava", code: "sk" },
+    { country: "🇭🇺 Ungarn", capital: "Budapest", code: "hu" },
+    { country: "🇷🇴 Rumänien", capital: "Bukarest", code: "ro" },
+    { country: "🇸🇮 Slowenien", capital: "Ljubljana", code: "si" },
+    { country: "🇭🇷 Kroatien", capital: "Zagreb", code: "hr" },
+    { country: "🇷🇸 Serbien", capital: "Belgrad", code: "rs" },
+    { country: "🇧🇦 Bosnien und Herzegowina", capital: "Sarajevo", code: "ba" },
+    { country: "🇧🇬 Bulgarien", capital: "Sofia", code: "bg" },
+    { country: "🇲🇪 Montenegro", capital: "Podgorica", code: "me" },
+    { country: "🇦🇱 Albanien", capital: "Tirana", code: "al" },
+    { country: "🇬🇷 Griechenland", capital: "Athen", code: "gr" },
+    { country: "🇹🇷 Türkei", capital: "Ankara", code: "tr" },
+    { country: "🇲🇩 Moldawien", capital: "Chisinau", code: "md" },
+    { country: "🇲🇰 Mazedonien", capital: "Skopje", code: "mk" },
+    { country: "🇳🇱 Niederlande", capital: "Amsterdam", code: "nl" },
+    { country: "🇧🇪 Belgien", capital: "Brüssel", code: "be" },
+    { country: "🇱🇺 Luxemburg", capital: "Luxemburg", code: "lu" }
 ];
 
 let currentCardIndex = 0;
@@ -48,13 +48,16 @@ let timeLeft = 7;
 let isShowingAnswer = false;
 let shuffledCapitals = [];
 let timerDuration = 7; // Default to "Schnell"
-let quizMode = 'classic'; // 'classic' or 'multiple'
+let quizMode = 'classic'; // 'classic' or 'multiple' or 'shape'
 let mcTimerInterval;
 let mcTimeLeft = 10;
 let currentChoices = [];
 let QUIZ_LENGTH = 10; // Default quiz length
 let autoProgressTimer; // Timer for auto-progression
 let autoProgressSeconds = 5; // Seconds before auto-progression
+let shapeTimerInterval;
+let shapeTimeLeft = 10;
+let currentShapeAnswer = null;
 
 const flashCard = document.getElementById('flash-card');
 const countryName = document.getElementById('country-name');
@@ -87,6 +90,15 @@ const resultsPercentage = document.getElementById('results-percentage');
 const resultsMessage = document.getElementById('results-message');
 const playAgainBtn = document.getElementById('play-again');
 const confettiCanvas = document.getElementById('confetti-canvas');
+const shapeMode = document.getElementById('shape-mode');
+const shapeDisplay = document.getElementById('shape-display');
+const shapeTimerDisplay = document.getElementById('shape-timer');
+const countryInput = document.getElementById('country-input');
+const capitalInput = document.getElementById('capital-input');
+const submitAnswerBtn = document.getElementById('submit-answer');
+const shapeFeedback = document.getElementById('shape-feedback');
+const feedbackText = document.getElementById('feedback-text');
+const shapeNextBtn = document.getElementById('shape-next');
 
 function shuffleArray(array) {
     const newArray = [...array];
@@ -111,11 +123,18 @@ function initializeQuiz() {
     if (quizMode === 'classic') {
         classicMode.style.display = 'block';
         multipleChoiceMode.style.display = 'none';
+        shapeMode.style.display = 'none';
         showNextCard();
-    } else {
+    } else if (quizMode === 'multiple') {
         classicMode.style.display = 'none';
         multipleChoiceMode.style.display = 'block';
+        shapeMode.style.display = 'none';
         showNextMultipleChoice();
+    } else if (quizMode === 'shape') {
+        classicMode.style.display = 'none';
+        multipleChoiceMode.style.display = 'none';
+        shapeMode.style.display = 'block';
+        showNextShape();
     }
 }
 
@@ -217,6 +236,8 @@ resetBtn.addEventListener('click', () => {
     if (confirm('Möchten Sie das Quiz wirklich zurücksetzen?')) {
         clearInterval(timer);
         clearInterval(mcTimerInterval);
+        clearInterval(shapeTimerInterval);
+        clearInterval(autoProgressTimer);
         startScreen.style.display = 'block';
         quizContent.style.display = 'none';
         progressContainer.style.display = 'none';
@@ -406,6 +427,35 @@ playAgainBtn.addEventListener('click', () => {
     progressBar.style.width = '0%';
 });
 
+// Shape mode event listeners
+submitAnswerBtn.addEventListener('click', () => {
+    submitShapeAnswer();
+});
+
+// Allow Enter key to submit answer
+countryInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+        if (capitalInput.value.trim()) {
+            submitShapeAnswer();
+        } else {
+            capitalInput.focus();
+        }
+    }
+});
+
+capitalInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+        submitShapeAnswer();
+    }
+});
+
+shapeNextBtn.addEventListener('click', () => {
+    clearInterval(autoProgressTimer);
+    shapeNextBtn.classList.remove('auto-progress');
+    currentCardIndex++;
+    showNextShape();
+});
+
 // Confetti Animation
 function createConfetti() {
     const canvas = confettiCanvas;
@@ -558,6 +608,7 @@ function showQuizComplete() {
     // Hide game modes and show results
     classicMode.style.display = 'none';
     multipleChoiceMode.style.display = 'none';
+    shapeMode.style.display = 'none';
     resultsScreen.style.display = 'block';
     progressContainer.style.display = 'none';
     resetBtn.style.display = 'none';
@@ -609,4 +660,106 @@ function startAutoProgressMC() {
 
 function updateButtonText(button, baseText, seconds) {
     button.textContent = `${baseText} (${seconds})`;
+}
+
+// Shape Mode Functions
+function showNextShape() {
+    if (currentCardIndex >= shuffledCapitals.length) {
+        showQuizComplete();
+        return;
+    }
+    
+    currentShapeAnswer = shuffledCapitals[currentCardIndex];
+    
+    // Clear previous inputs and feedback
+    countryInput.value = '';
+    capitalInput.value = '';
+    shapeFeedback.style.display = 'none';
+    shapeFeedback.classList.remove('correct', 'incorrect');
+    submitAnswerBtn.style.display = 'block';
+    shapeNextBtn.style.display = 'none';
+    
+    // Display country shape using mapsicon
+    shapeDisplay.innerHTML = `<span class="map-icon map-icon-${currentShapeAnswer.code}"></span>`;
+    
+    updateProgress();
+    startShapeTimer();
+}
+
+function startShapeTimer() {
+    shapeTimeLeft = 10;
+    shapeTimerDisplay.textContent = shapeTimeLeft;
+    
+    shapeTimerInterval = setInterval(() => {
+        shapeTimeLeft--;
+        shapeTimerDisplay.textContent = shapeTimeLeft;
+        
+        if (shapeTimeLeft === 0) {
+            clearInterval(shapeTimerInterval);
+            submitShapeAnswer();
+        }
+    }, 1000);
+}
+
+function submitShapeAnswer() {
+    clearInterval(shapeTimerInterval);
+    
+    const countryGuess = countryInput.value.trim().toLowerCase();
+    const capitalGuess = capitalInput.value.trim().toLowerCase();
+    
+    // Remove emoji and trim the country name for comparison
+    const correctCountry = currentShapeAnswer.country.split(' ').slice(1).join(' ').toLowerCase();
+    const correctCapital = currentShapeAnswer.capital.toLowerCase();
+    
+    const countryCorrect = countryGuess === correctCountry || 
+                          countryGuess === correctCountry.replace('ä', 'ae')
+                                                      .replace('ö', 'oe')
+                                                      .replace('ü', 'ue')
+                                                      .replace('ß', 'ss');
+    
+    const capitalCorrect = capitalGuess === correctCapital || 
+                          capitalGuess === correctCapital.replace('ä', 'ae')
+                                                        .replace('ö', 'oe')
+                                                        .replace('ü', 'ue')
+                                                        .replace('ß', 'ss');
+    
+    if (countryCorrect && capitalCorrect) {
+        correctCount++;
+        shapeFeedback.classList.add('correct');
+        feedbackText.textContent = `Richtig! ${currentShapeAnswer.country} - ${currentShapeAnswer.capital}`;
+    } else {
+        wrongCount++;
+        shapeFeedback.classList.add('incorrect');
+        if (!countryCorrect && !capitalCorrect) {
+            feedbackText.textContent = `Falsch! Es war ${currentShapeAnswer.country} - ${currentShapeAnswer.capital}`;
+        } else if (countryCorrect) {
+            feedbackText.textContent = `Teilweise richtig! Land: ✓ ${currentShapeAnswer.country}, Hauptstadt: ✗ ${currentShapeAnswer.capital}`;
+        } else {
+            feedbackText.textContent = `Teilweise richtig! Land: ✗ ${currentShapeAnswer.country}, Hauptstadt: ✓ ${currentShapeAnswer.capital}`;
+        }
+    }
+    
+    updateScores();
+    shapeFeedback.style.display = 'block';
+    submitAnswerBtn.style.display = 'none';
+    shapeNextBtn.style.display = 'block';
+    startAutoProgressShape();
+}
+
+function startAutoProgressShape() {
+    let secondsLeft = autoProgressSeconds;
+    updateButtonText(shapeNextBtn, 'Nächste Frage', secondsLeft);
+    shapeNextBtn.classList.add('auto-progress');
+    
+    autoProgressTimer = setInterval(() => {
+        secondsLeft--;
+        updateButtonText(shapeNextBtn, 'Nächste Frage', secondsLeft);
+        
+        if (secondsLeft === 0) {
+            clearInterval(autoProgressTimer);
+            shapeNextBtn.classList.remove('auto-progress');
+            currentCardIndex++;
+            showNextShape();
+        }
+    }, 1000);
 }
