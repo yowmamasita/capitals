@@ -19,7 +19,7 @@ const capitals = [
     { country: "🇱🇻 Lettland", capital: "Riga" },
     { country: "🇱🇹 Litauen", capital: "Vilnius" },
     { country: "🇧🇾 Weißrussland", capital: "Minsk" },
-    { country: "🇺🇦 Ukraine", capital: "Kiew" },
+    { country: "🇺🇦 Ukraine", capital: "Kyjiw" },
     { country: "🇨🇿 Tschechien", capital: "Prag" },
     { country: "🇸🇰 Slowakei", capital: "Bratislava" },
     { country: "🇭🇺 Ungarn", capital: "Budapest" },
