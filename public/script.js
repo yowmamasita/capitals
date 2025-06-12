@@ -218,6 +218,187 @@ function updateProgress() {
     progressBar.style.width = `${progress}%`;
 }
 
+// Define shape mode functions early to avoid hoisting issues
+const showNextShape = function() {
+    if (!shuffledCapitals || currentCardIndex >= shuffledCapitals.length) {
+        showQuizComplete();
+        return;
+    }
+    
+    currentShapeAnswer = shuffledCapitals[currentCardIndex];
+    selectedCountry = null;
+    selectedCapital = null;
+    
+    // Clear previous state
+    shapeFeedback.style.display = 'none';
+    shapeFeedback.classList.remove('correct', 'incorrect');
+    shapeSubmitBtn.style.display = 'none';
+    shapeNextBtn.style.display = 'none';
+    
+    // Display country map shape
+    shapeDisplay.innerHTML = `
+        <img src="maps/${currentShapeAnswer.code}.png" alt="Country shape" class="country-shape">
+    `;
+    
+    // Generate 3 country-capital pairs (including the correct one)
+    const wrongPairs = getRandomCountries(currentShapeAnswer, 2);
+    const allPairs = [currentShapeAnswer, ...wrongPairs];
+    
+    // Shuffle countries and capitals separately but maintain the pairs
+    const shuffledCountries = shuffleArray([...allPairs]);
+    const shuffledCapitals = shuffleArray(allPairs.map(pair => pair.capital));
+    
+    // Populate country choices
+    shapeCountryChoices.innerHTML = '';
+    shuffledCountries.forEach((choice) => {
+        const button = document.createElement('button');
+        button.className = 'shape-choice-btn';
+        button.innerHTML = `
+            <span class="country-flag">${choice.country.split(' ')[0]}</span>
+            <span>${choice.country.split(' ').slice(1).join(' ')}</span>
+        `;
+        button.onclick = () => selectCountry(choice, button);
+        shapeCountryChoices.appendChild(button);
+    });
+    
+    // Populate capital choices (using the capitals from the same pairs)
+    shapeCapitalChoices.innerHTML = '';
+    shuffledCapitals.forEach((capital) => {
+        const button = document.createElement('button');
+        button.className = 'shape-choice-btn';
+        button.textContent = capital;
+        button.onclick = () => selectCapital(capital, button);
+        shapeCapitalChoices.appendChild(button);
+    });
+    
+    updateProgress();
+    startShapeTimer();
+};
+
+const startShapeTimer = function() {
+    shapeTimeLeft = 10;
+    shapeTimerDisplay.textContent = shapeTimeLeft;
+    
+    shapeTimerInterval = setInterval(() => {
+        shapeTimeLeft--;
+        shapeTimerDisplay.textContent = shapeTimeLeft;
+        
+        if (shapeTimeLeft === 0) {
+            clearInterval(shapeTimerInterval);
+            // Auto-submit with current selections (or none)
+            submitShapeAnswer();
+        }
+    }, 1000);
+};
+
+const submitShapeAnswer = function() {
+    clearInterval(shapeTimerInterval);
+    
+    // Disable all buttons
+    shapeCountryChoices.querySelectorAll('.shape-choice-btn').forEach(btn => {
+        btn.disabled = true;
+        btn.onclick = null;
+    });
+    shapeCapitalChoices.querySelectorAll('.shape-choice-btn').forEach(btn => {
+        btn.disabled = true;
+        btn.onclick = null;
+    });
+    shapeSubmitBtn.style.display = 'none';
+    
+    const countryCorrect = selectedCountry && selectedCountry.code === currentShapeAnswer.code;
+    const capitalCorrect = selectedCapital === currentShapeAnswer.capital;
+    
+    // Mark correct/incorrect choices
+    shapeCountryChoices.querySelectorAll('.shape-choice-btn').forEach(btn => {
+        const countryText = btn.innerText;
+        if (countryText.includes(currentShapeAnswer.country.split(' ').slice(1).join(' '))) {
+            btn.classList.add('correct');
+        } else if (btn.classList.contains('selected')) {
+            btn.classList.add('incorrect');
+        }
+    });
+    
+    shapeCapitalChoices.querySelectorAll('.shape-choice-btn').forEach(btn => {
+        if (btn.textContent === currentShapeAnswer.capital) {
+            btn.classList.add('correct');
+        } else if (btn.classList.contains('selected')) {
+            btn.classList.add('incorrect');
+        }
+    });
+    
+    // Update score and show feedback
+    if (countryCorrect && capitalCorrect) {
+        correctCount++;
+        shapeFeedback.classList.add('correct');
+        shapeFeedbackText.textContent = `Richtig! ${currentShapeAnswer.country} - ${currentShapeAnswer.capital}`;
+    } else {
+        wrongCount++;
+        shapeFeedback.classList.add('incorrect');
+        if (!countryCorrect && !capitalCorrect) {
+            shapeFeedbackText.textContent = `Falsch! Es war ${currentShapeAnswer.country} - ${currentShapeAnswer.capital}`;
+        } else if (countryCorrect) {
+            shapeFeedbackText.textContent = `Teilweise richtig! Land: ✓, Hauptstadt: ✗ (${currentShapeAnswer.capital})`;
+        } else if (capitalCorrect) {
+            shapeFeedbackText.textContent = `Teilweise richtig! Land: ✗ (${currentShapeAnswer.country}), Hauptstadt: ✓`;
+        }
+    }
+    
+    updateScores();
+    shapeFeedback.style.display = 'block';
+    shapeNextBtn.style.display = 'block';
+    startAutoProgressShape();
+};
+
+const startAutoProgressShape = function() {
+    let secondsLeft = autoProgressSeconds;
+    updateButtonText(shapeNextBtn, 'Nächste Frage', secondsLeft);
+    shapeNextBtn.classList.add('auto-progress');
+    
+    autoProgressTimer = setInterval(() => {
+        secondsLeft--;
+        updateButtonText(shapeNextBtn, 'Nächste Frage', secondsLeft);
+        
+        if (secondsLeft === 0) {
+            clearInterval(autoProgressTimer);
+            shapeNextBtn.classList.remove('auto-progress');
+            currentCardIndex++;
+            showNextShape();
+        }
+    }, 1000);
+};
+
+function selectCountry(country, button) {
+    // Clear previous selection
+    shapeCountryChoices.querySelectorAll('.shape-choice-btn').forEach(btn => {
+        btn.classList.remove('selected');
+    });
+    
+    // Mark new selection
+    button.classList.add('selected');
+    selectedCountry = country;
+    
+    // Show submit button if both are selected
+    if (selectedCountry && selectedCapital) {
+        shapeSubmitBtn.style.display = 'block';
+    }
+}
+
+function selectCapital(capital, button) {
+    // Clear previous selection
+    shapeCapitalChoices.querySelectorAll('.shape-choice-btn').forEach(btn => {
+        btn.classList.remove('selected');
+    });
+    
+    // Mark new selection
+    button.classList.add('selected');
+    selectedCapital = capital;
+    
+    // Show submit button if both are selected
+    if (selectedCountry && selectedCapital) {
+        shapeSubmitBtn.style.display = 'block';
+    }
+}
+
 showAnswerBtn.addEventListener('click', showAnswer);
 
 correctBtn.addEventListener('click', () => {
@@ -650,62 +831,7 @@ function updateButtonText(button, baseText, seconds) {
     button.textContent = `${baseText} (${seconds})`;
 }
 
-// Shape Mode Functions
-const showNextShape = function() {
-    if (!shuffledCapitals || currentCardIndex >= shuffledCapitals.length) {
-        showQuizComplete();
-        return;
-    }
-    
-    currentShapeAnswer = shuffledCapitals[currentCardIndex];
-    selectedCountry = null;
-    selectedCapital = null;
-    
-    // Clear previous state
-    shapeFeedback.style.display = 'none';
-    shapeFeedback.classList.remove('correct', 'incorrect');
-    shapeSubmitBtn.style.display = 'none';
-    shapeNextBtn.style.display = 'none';
-    
-    // Display country map shape
-    shapeDisplay.innerHTML = `
-        <img src="maps/${currentShapeAnswer.code}.png" alt="Country shape" class="country-shape">
-    `;
-    
-    // Generate 3 country-capital pairs (including the correct one)
-    const wrongPairs = getRandomCountries(currentShapeAnswer, 2);
-    const allPairs = [currentShapeAnswer, ...wrongPairs];
-    
-    // Shuffle countries and capitals separately but maintain the pairs
-    const shuffledCountries = shuffleArray([...allPairs]);
-    const shuffledCapitals = shuffleArray(allPairs.map(pair => pair.capital));
-    
-    // Populate country choices
-    shapeCountryChoices.innerHTML = '';
-    shuffledCountries.forEach((choice) => {
-        const button = document.createElement('button');
-        button.className = 'shape-choice-btn';
-        button.innerHTML = `
-            <span class="country-flag">${choice.country.split(' ')[0]}</span>
-            <span>${choice.country.split(' ').slice(1).join(' ')}</span>
-        `;
-        button.onclick = () => selectCountry(choice, button);
-        shapeCountryChoices.appendChild(button);
-    });
-    
-    // Populate capital choices (using the capitals from the same pairs)
-    shapeCapitalChoices.innerHTML = '';
-    shuffledCapitals.forEach((capital) => {
-        const button = document.createElement('button');
-        button.className = 'shape-choice-btn';
-        button.textContent = capital;
-        button.onclick = () => selectCapital(capital, button);
-        shapeCapitalChoices.appendChild(button);
-    });
-    
-    updateProgress();
-    startShapeTimer();
-};
+// Shape Mode Functions (defined earlier to avoid hoisting issues)
 
 function getRandomCountries(exclude, count) {
     const available = capitals.filter(c => c.code !== exclude.code);
@@ -713,126 +839,4 @@ function getRandomCountries(exclude, count) {
     return shuffled.slice(0, count);
 }
 
-function selectCountry(country, button) {
-    // Clear previous selection
-    shapeCountryChoices.querySelectorAll('.shape-choice-btn').forEach(btn => {
-        btn.classList.remove('selected');
-    });
-    
-    // Mark new selection
-    button.classList.add('selected');
-    selectedCountry = country;
-    
-    // Show submit button if both are selected
-    if (selectedCountry && selectedCapital) {
-        shapeSubmitBtn.style.display = 'block';
-    }
-}
-
-function selectCapital(capital, button) {
-    // Clear previous selection
-    shapeCapitalChoices.querySelectorAll('.shape-choice-btn').forEach(btn => {
-        btn.classList.remove('selected');
-    });
-    
-    // Mark new selection
-    button.classList.add('selected');
-    selectedCapital = capital;
-    
-    // Show submit button if both are selected
-    if (selectedCountry && selectedCapital) {
-        shapeSubmitBtn.style.display = 'block';
-    }
-}
-
-const startShapeTimer = function() {
-    shapeTimeLeft = 10;
-    shapeTimerDisplay.textContent = shapeTimeLeft;
-    
-    shapeTimerInterval = setInterval(() => {
-        shapeTimeLeft--;
-        shapeTimerDisplay.textContent = shapeTimeLeft;
-        
-        if (shapeTimeLeft === 0) {
-            clearInterval(shapeTimerInterval);
-            // Auto-submit with current selections (or none)
-            submitShapeAnswer();
-        }
-    }, 1000);
-};
-
-const submitShapeAnswer = function() {
-    clearInterval(shapeTimerInterval);
-    
-    // Disable all buttons
-    shapeCountryChoices.querySelectorAll('.shape-choice-btn').forEach(btn => {
-        btn.disabled = true;
-        btn.onclick = null;
-    });
-    shapeCapitalChoices.querySelectorAll('.shape-choice-btn').forEach(btn => {
-        btn.disabled = true;
-        btn.onclick = null;
-    });
-    shapeSubmitBtn.style.display = 'none';
-    
-    const countryCorrect = selectedCountry && selectedCountry.code === currentShapeAnswer.code;
-    const capitalCorrect = selectedCapital === currentShapeAnswer.capital;
-    
-    // Mark correct/incorrect choices
-    shapeCountryChoices.querySelectorAll('.shape-choice-btn').forEach(btn => {
-        const countryText = btn.innerText;
-        if (countryText.includes(currentShapeAnswer.country.split(' ').slice(1).join(' '))) {
-            btn.classList.add('correct');
-        } else if (btn.classList.contains('selected')) {
-            btn.classList.add('incorrect');
-        }
-    });
-    
-    shapeCapitalChoices.querySelectorAll('.shape-choice-btn').forEach(btn => {
-        if (btn.textContent === currentShapeAnswer.capital) {
-            btn.classList.add('correct');
-        } else if (btn.classList.contains('selected')) {
-            btn.classList.add('incorrect');
-        }
-    });
-    
-    // Update score and show feedback
-    if (countryCorrect && capitalCorrect) {
-        correctCount++;
-        shapeFeedback.classList.add('correct');
-        shapeFeedbackText.textContent = `Richtig! ${currentShapeAnswer.country} - ${currentShapeAnswer.capital}`;
-    } else {
-        wrongCount++;
-        shapeFeedback.classList.add('incorrect');
-        if (!countryCorrect && !capitalCorrect) {
-            shapeFeedbackText.textContent = `Falsch! Es war ${currentShapeAnswer.country} - ${currentShapeAnswer.capital}`;
-        } else if (countryCorrect) {
-            shapeFeedbackText.textContent = `Teilweise richtig! Land: ✓, Hauptstadt: ✗ (${currentShapeAnswer.capital})`;
-        } else if (capitalCorrect) {
-            shapeFeedbackText.textContent = `Teilweise richtig! Land: ✗ (${currentShapeAnswer.country}), Hauptstadt: ✓`;
-        }
-    }
-    
-    updateScores();
-    shapeFeedback.style.display = 'block';
-    shapeNextBtn.style.display = 'block';
-    startAutoProgressShape();
-};
-
-const startAutoProgressShape = function() {
-    let secondsLeft = autoProgressSeconds;
-    updateButtonText(shapeNextBtn, 'Nächste Frage', secondsLeft);
-    shapeNextBtn.classList.add('auto-progress');
-    
-    autoProgressTimer = setInterval(() => {
-        secondsLeft--;
-        updateButtonText(shapeNextBtn, 'Nächste Frage', secondsLeft);
-        
-        if (secondsLeft === 0) {
-            clearInterval(autoProgressTimer);
-            shapeNextBtn.classList.remove('auto-progress');
-            currentCardIndex++;
-            showNextShape();
-        }
-    }, 1000);
-};
+// Shape mode functions already defined earlier
