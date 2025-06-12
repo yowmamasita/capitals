@@ -707,50 +707,63 @@ h1 {
     font-weight: 600;
 }
 
-.shape-input-container {
+.shape-choices-grid {
     display: flex;
     flex-direction: column;
     gap: 15px;
-    max-width: 400px;
-    margin: 0 auto;
+    margin-bottom: 20px;
+    max-width: 500px;
+    margin: 0 auto 20px;
 }
 
-.shape-input {
-    padding: 12px 20px;
+.shape-choice-btn {
+    background: white;
     border: 2px solid #e2e8f0;
-    border-radius: 8px;
-    font-size: 1em;
-    transition: all 0.3s ease;
-}
-
-.shape-input:focus {
-    outline: none;
-    border-color: #667eea;
-    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-}
-
-.shape-feedback {
-    text-align: center;
+    color: #333;
     padding: 20px;
     border-radius: 10px;
-    margin-top: 20px;
-    animation: fadeIn 0.3s ease-out;
-}
-
-.shape-feedback.correct {
-    background: #e6fffa;
-    color: #065f46;
-}
-
-.shape-feedback.incorrect {
-    background: #fee;
-    color: #991b1b;
-}
-
-#feedback-text {
     font-size: 1.1em;
     font-weight: 600;
-    margin-bottom: 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.shape-choice-btn:hover:not(:disabled) {
+    border-color: #667eea;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.shape-choice-btn.correct {
+    background: #48bb78;
+    color: white;
+    border-color: #48bb78;
+}
+
+.shape-choice-btn.incorrect {
+    background: #f56565;
+    color: white;
+    border-color: #f56565;
+}
+
+.shape-choice-btn.show-correct {
+    background: #48bb78;
+    color: white;
+    border-color: #48bb78;
+    animation: pulse 0.5s ease-out;
+}
+
+.shape-choice-btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+.country-flag {
+    font-size: 1.5em;
 }
 
 @media (max-width: 600px) {

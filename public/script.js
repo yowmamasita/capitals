@@ -93,11 +93,7 @@ const confettiCanvas = document.getElementById('confetti-canvas');
 const shapeMode = document.getElementById('shape-mode');
 const shapeDisplay = document.getElementById('shape-display');
 const shapeTimerDisplay = document.getElementById('shape-timer');
-const countryInput = document.getElementById('country-input');
-const capitalInput = document.getElementById('capital-input');
-const submitAnswerBtn = document.getElementById('submit-answer');
-const shapeFeedback = document.getElementById('shape-feedback');
-const feedbackText = document.getElementById('feedback-text');
+const shapeChoicesGrid = document.getElementById('shape-choices-grid');
 const shapeNextBtn = document.getElementById('shape-next');
 
 function shuffleArray(array) {
@@ -428,27 +424,6 @@ playAgainBtn.addEventListener('click', () => {
 });
 
 // Shape mode event listeners
-submitAnswerBtn.addEventListener('click', () => {
-    submitShapeAnswer();
-});
-
-// Allow Enter key to submit answer
-countryInput.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') {
-        if (capitalInput.value.trim()) {
-            submitShapeAnswer();
-        } else {
-            capitalInput.focus();
-        }
-    }
-});
-
-capitalInput.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') {
-        submitShapeAnswer();
-    }
-});
-
 shapeNextBtn.addEventListener('click', () => {
     clearInterval(autoProgressTimer);
     shapeNextBtn.classList.remove('auto-progress');
@@ -671,19 +646,38 @@ function showNextShape() {
     
     currentShapeAnswer = shuffledCapitals[currentCardIndex];
     
-    // Clear previous inputs and feedback
-    countryInput.value = '';
-    capitalInput.value = '';
-    shapeFeedback.style.display = 'none';
-    shapeFeedback.classList.remove('correct', 'incorrect');
-    submitAnswerBtn.style.display = 'block';
+    // Clear previous choices
     shapeNextBtn.style.display = 'none';
     
     // Display country shape using mapsicon
     shapeDisplay.innerHTML = `<span class="map-icon map-icon-${currentShapeAnswer.code}"></span>`;
     
+    // Generate choices
+    const wrongChoices = getRandomCountries(currentShapeAnswer, 2);
+    const allChoices = [currentShapeAnswer, ...wrongChoices];
+    const shuffledChoices = shuffleArray(allChoices);
+    
+    // Clear and populate choices grid
+    shapeChoicesGrid.innerHTML = '';
+    shuffledChoices.forEach((choice) => {
+        const button = document.createElement('button');
+        button.className = 'shape-choice-btn';
+        button.innerHTML = `
+            <span class="country-flag">${choice.country.split(' ')[0]}</span>
+            <span>${choice.country.split(' ').slice(1).join(' ')} - ${choice.capital}</span>
+        `;
+        button.onclick = () => handleShapeChoice(choice, currentShapeAnswer);
+        shapeChoicesGrid.appendChild(button);
+    });
+    
     updateProgress();
     startShapeTimer();
+}
+
+function getRandomCountries(exclude, count) {
+    const available = capitals.filter(c => c.code !== exclude.code);
+    const shuffled = shuffleArray(available);
+    return shuffled.slice(0, count);
 }
 
 function startShapeTimer() {
@@ -696,52 +690,41 @@ function startShapeTimer() {
         
         if (shapeTimeLeft === 0) {
             clearInterval(shapeTimerInterval);
-            submitShapeAnswer();
+            // Auto-select no answer (wrong)
+            handleShapeChoice({code: 'none', capital: 'none'}, currentShapeAnswer);
         }
     }, 1000);
 }
 
-function submitShapeAnswer() {
+function handleShapeChoice(selected, correct) {
     clearInterval(shapeTimerInterval);
     
-    const countryGuess = countryInput.value.trim().toLowerCase();
-    const capitalGuess = capitalInput.value.trim().toLowerCase();
+    // Disable all buttons
+    const buttons = shapeChoicesGrid.querySelectorAll('.shape-choice-btn');
+    buttons.forEach(btn => {
+        btn.disabled = true;
+        btn.onclick = null;
+    });
     
-    // Remove emoji and trim the country name for comparison
-    const correctCountry = currentShapeAnswer.country.split(' ').slice(1).join(' ').toLowerCase();
-    const correctCapital = currentShapeAnswer.capital.toLowerCase();
-    
-    const countryCorrect = countryGuess === correctCountry || 
-                          countryGuess === correctCountry.replace('ä', 'ae')
-                                                      .replace('ö', 'oe')
-                                                      .replace('ü', 'ue')
-                                                      .replace('ß', 'ss');
-    
-    const capitalCorrect = capitalGuess === correctCapital || 
-                          capitalGuess === correctCapital.replace('ä', 'ae')
-                                                        .replace('ö', 'oe')
-                                                        .replace('ü', 'ue')
-                                                        .replace('ß', 'ss');
-    
-    if (countryCorrect && capitalCorrect) {
-        correctCount++;
-        shapeFeedback.classList.add('correct');
-        feedbackText.textContent = `Richtig! ${currentShapeAnswer.country} - ${currentShapeAnswer.capital}`;
-    } else {
-        wrongCount++;
-        shapeFeedback.classList.add('incorrect');
-        if (!countryCorrect && !capitalCorrect) {
-            feedbackText.textContent = `Falsch! Es war ${currentShapeAnswer.country} - ${currentShapeAnswer.capital}`;
-        } else if (countryCorrect) {
-            feedbackText.textContent = `Teilweise richtig! Land: ✓ ${currentShapeAnswer.country}, Hauptstadt: ✗ ${currentShapeAnswer.capital}`;
-        } else {
-            feedbackText.textContent = `Teilweise richtig! Land: ✗ ${currentShapeAnswer.country}, Hauptstadt: ✓ ${currentShapeAnswer.capital}`;
+    // Find and mark the clicked button
+    buttons.forEach(btn => {
+        const buttonText = btn.innerText;
+        if (buttonText.includes(selected.capital)) {
+            if (selected.code === correct.code) {
+                btn.classList.add('correct');
+                correctCount++;
+            } else {
+                btn.classList.add('incorrect');
+                wrongCount++;
+            }
         }
-    }
+        // Show the correct answer
+        if (buttonText.includes(correct.capital)) {
+            btn.classList.add('show-correct');
+        }
+    });
     
     updateScores();
-    shapeFeedback.style.display = 'block';
-    submitAnswerBtn.style.display = 'none';
     shapeNextBtn.style.display = 'block';
     startAutoProgressShape();
 }
