@@ -667,15 +667,13 @@ function showNextShape() {
     // Display country shape using mapsicon
     shapeDisplay.innerHTML = `<span class="map-icon map-icon-${currentShapeAnswer.code}"></span>`;
     
-    // Generate country choices
-    const wrongCountries = getRandomCountries(currentShapeAnswer, 2);
-    const allCountries = [currentShapeAnswer, ...wrongCountries];
-    const shuffledCountries = shuffleArray(allCountries);
+    // Generate 3 country-capital pairs (including the correct one)
+    const wrongPairs = getRandomCountries(currentShapeAnswer, 2);
+    const allPairs = [currentShapeAnswer, ...wrongPairs];
     
-    // Generate capital choices
-    const wrongCapitals = getRandomCapitals(currentShapeAnswer.capital, 2);
-    const allCapitals = [currentShapeAnswer.capital, ...wrongCapitals];
-    const shuffledCapitals = shuffleArray(allCapitals);
+    // Shuffle countries and capitals separately but maintain the pairs
+    const shuffledCountries = shuffleArray([...allPairs]);
+    const shuffledCapitals = shuffleArray(allPairs.map(pair => pair.capital));
     
     // Populate country choices
     shapeCountryChoices.innerHTML = '';
@@ -690,7 +688,7 @@ function showNextShape() {
         shapeCountryChoices.appendChild(button);
     });
     
-    // Populate capital choices
+    // Populate capital choices (using the capitals from the same pairs)
     shapeCapitalChoices.innerHTML = '';
     shuffledCapitals.forEach((capital) => {
         const button = document.createElement('button');
@@ -708,12 +706,6 @@ function getRandomCountries(exclude, count) {
     const available = capitals.filter(c => c.code !== exclude.code);
     const shuffled = shuffleArray(available);
     return shuffled.slice(0, count);
-}
-
-function getRandomCapitals(exclude, count) {
-    const available = capitals.filter(c => c.capital !== exclude);
-    const shuffled = shuffleArray(available);
-    return shuffled.slice(0, count).map(c => c.capital);
 }
 
 function selectCountry(country, button) {
