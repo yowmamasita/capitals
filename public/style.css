@@ -674,9 +674,21 @@ h1 {
     margin-bottom: 20px;
 }
 
-.shape-display span {
-    font-size: 150px;
-    color: #667eea;
+.shape-placeholder {
+    text-align: center;
+}
+
+.shape-flag {
+    display: block;
+    font-size: 120px;
+    margin-bottom: 10px;
+}
+
+.shape-name {
+    display: block;
+    font-size: 18px;
+    color: #999;
+    font-style: italic;
 }
 
 #shape-timer {
@@ -802,8 +814,12 @@ h1 {
 }
 
 @media (max-width: 600px) {
-    .shape-display span {
-        font-size: 100px;
+    .shape-flag {
+        font-size: 80px;
+    }
+    
+    .shape-name {
+        font-size: 16px;
     }
     
     .shape-card {
