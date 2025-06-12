@@ -651,7 +651,7 @@ function updateButtonText(button, baseText, seconds) {
 }
 
 // Shape Mode Functions
-function showNextShape() {
+const showNextShape = function() {
     if (!shuffledCapitals || currentCardIndex >= shuffledCapitals.length) {
         showQuizComplete();
         return;
@@ -705,7 +705,7 @@ function showNextShape() {
     
     updateProgress();
     startShapeTimer();
-}
+};
 
 function getRandomCountries(exclude, count) {
     const available = capitals.filter(c => c.code !== exclude.code);
@@ -745,7 +745,7 @@ function selectCapital(capital, button) {
     }
 }
 
-function startShapeTimer() {
+const startShapeTimer = function() {
     shapeTimeLeft = 10;
     shapeTimerDisplay.textContent = shapeTimeLeft;
     
@@ -759,9 +759,9 @@ function startShapeTimer() {
             submitShapeAnswer();
         }
     }, 1000);
-}
+};
 
-function submitShapeAnswer() {
+const submitShapeAnswer = function() {
     clearInterval(shapeTimerInterval);
     
     // Disable all buttons
@@ -817,9 +817,9 @@ function submitShapeAnswer() {
     shapeFeedback.style.display = 'block';
     shapeNextBtn.style.display = 'block';
     startAutoProgressShape();
-}
+};
 
-function startAutoProgressShape() {
+const startAutoProgressShape = function() {
     let secondsLeft = autoProgressSeconds;
     updateButtonText(shapeNextBtn, 'Nächste Frage', secondsLeft);
     shapeNextBtn.classList.add('auto-progress');
@@ -835,4 +835,4 @@ function startAutoProgressShape() {
             showNextShape();
         }
     }, 1000);
-}
+};
