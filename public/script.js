@@ -121,6 +121,7 @@ function initializeQuiz() {
     quizContent.style.display = 'block';
     progressContainer.style.display = 'block';
     resetBtn.style.display = 'block';
+    document.querySelector('.score-board').style.display = 'flex';
     
     if (quizMode === 'classic') {
         classicMode.style.display = 'block';
@@ -244,6 +245,7 @@ resetBtn.addEventListener('click', () => {
         quizContent.style.display = 'none';
         progressContainer.style.display = 'none';
         resetBtn.style.display = 'none';
+        document.querySelector('.score-board').style.display = 'none';
         correctCount = 0;
         wrongCount = 0;
         updateScores();
@@ -423,6 +425,7 @@ playAgainBtn.addEventListener('click', () => {
     quizContent.style.display = 'none';
     progressContainer.style.display = 'none';
     resetBtn.style.display = 'none';
+    document.querySelector('.score-board').style.display = 'none';
     correctCount = 0;
     wrongCount = 0;
     updateScores();
@@ -649,7 +652,7 @@ function updateButtonText(button, baseText, seconds) {
 
 // Shape Mode Functions
 function showNextShape() {
-    if (currentCardIndex >= shuffledCapitals.length) {
+    if (!shuffledCapitals || currentCardIndex >= shuffledCapitals.length) {
         showQuizComplete();
         return;
     }
