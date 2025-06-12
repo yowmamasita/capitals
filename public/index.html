@@ -145,14 +145,26 @@
                         <div class="timer" id="shape-timer">10</div>
                     </div>
                     
-                    <div class="shape-question">
-                        <h3>Welches Land ist das?</h3>
+                    <div class="shape-selections">
+                        <div class="shape-section">
+                            <h4>Wähle das Land:</h4>
+                            <div class="shape-country-choices" id="shape-country-choices">
+                                <!-- Country choices will be dynamically added -->
+                            </div>
+                        </div>
+                        
+                        <div class="shape-section">
+                            <h4>Wähle die Hauptstadt:</h4>
+                            <div class="shape-capital-choices" id="shape-capital-choices">
+                                <!-- Capital choices will be dynamically added -->
+                            </div>
+                        </div>
                     </div>
                     
-                    <div class="shape-choices-grid" id="shape-choices-grid">
-                        <!-- Choices will be dynamically added -->
+                    <button id="shape-submit" class="btn btn-primary" style="display: none;">Antwort prüfen</button>
+                    <div class="shape-feedback" id="shape-feedback" style="display: none;">
+                        <p id="shape-feedback-text"></p>
                     </div>
-                    
                     <button id="shape-next" class="btn btn-secondary" style="display: none;">Nächste Frage</button>
                 </div>
             </div>

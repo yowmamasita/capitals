@@ -58,6 +58,8 @@ let autoProgressSeconds = 5; // Seconds before auto-progression
 let shapeTimerInterval;
 let shapeTimeLeft = 10;
 let currentShapeAnswer = null;
+let selectedCountry = null;
+let selectedCapital = null;
 
 const flashCard = document.getElementById('flash-card');
 const countryName = document.getElementById('country-name');
@@ -93,7 +95,11 @@ const confettiCanvas = document.getElementById('confetti-canvas');
 const shapeMode = document.getElementById('shape-mode');
 const shapeDisplay = document.getElementById('shape-display');
 const shapeTimerDisplay = document.getElementById('shape-timer');
-const shapeChoicesGrid = document.getElementById('shape-choices-grid');
+const shapeCountryChoices = document.getElementById('shape-country-choices');
+const shapeCapitalChoices = document.getElementById('shape-capital-choices');
+const shapeSubmitBtn = document.getElementById('shape-submit');
+const shapeFeedback = document.getElementById('shape-feedback');
+const shapeFeedbackText = document.getElementById('shape-feedback-text');
 const shapeNextBtn = document.getElementById('shape-next');
 
 function shuffleArray(array) {
@@ -424,6 +430,10 @@ playAgainBtn.addEventListener('click', () => {
 });
 
 // Shape mode event listeners
+shapeSubmitBtn.addEventListener('click', () => {
+    submitShapeAnswer();
+});
+
 shapeNextBtn.addEventListener('click', () => {
     clearInterval(autoProgressTimer);
     shapeNextBtn.classList.remove('auto-progress');
@@ -645,29 +655,49 @@ function showNextShape() {
     }
     
     currentShapeAnswer = shuffledCapitals[currentCardIndex];
+    selectedCountry = null;
+    selectedCapital = null;
     
-    // Clear previous choices
+    // Clear previous state
+    shapeFeedback.style.display = 'none';
+    shapeFeedback.classList.remove('correct', 'incorrect');
+    shapeSubmitBtn.style.display = 'none';
     shapeNextBtn.style.display = 'none';
     
     // Display country shape using mapsicon
     shapeDisplay.innerHTML = `<span class="map-icon map-icon-${currentShapeAnswer.code}"></span>`;
     
-    // Generate choices
-    const wrongChoices = getRandomCountries(currentShapeAnswer, 2);
-    const allChoices = [currentShapeAnswer, ...wrongChoices];
-    const shuffledChoices = shuffleArray(allChoices);
+    // Generate country choices
+    const wrongCountries = getRandomCountries(currentShapeAnswer, 2);
+    const allCountries = [currentShapeAnswer, ...wrongCountries];
+    const shuffledCountries = shuffleArray(allCountries);
     
-    // Clear and populate choices grid
-    shapeChoicesGrid.innerHTML = '';
-    shuffledChoices.forEach((choice) => {
+    // Generate capital choices
+    const wrongCapitals = getRandomCapitals(currentShapeAnswer.capital, 2);
+    const allCapitals = [currentShapeAnswer.capital, ...wrongCapitals];
+    const shuffledCapitals = shuffleArray(allCapitals);
+    
+    // Populate country choices
+    shapeCountryChoices.innerHTML = '';
+    shuffledCountries.forEach((choice) => {
         const button = document.createElement('button');
         button.className = 'shape-choice-btn';
         button.innerHTML = `
             <span class="country-flag">${choice.country.split(' ')[0]}</span>
-            <span>${choice.country.split(' ').slice(1).join(' ')} - ${choice.capital}</span>
+            <span>${choice.country.split(' ').slice(1).join(' ')}</span>
         `;
-        button.onclick = () => handleShapeChoice(choice, currentShapeAnswer);
-        shapeChoicesGrid.appendChild(button);
+        button.onclick = () => selectCountry(choice, button);
+        shapeCountryChoices.appendChild(button);
+    });
+    
+    // Populate capital choices
+    shapeCapitalChoices.innerHTML = '';
+    shuffledCapitals.forEach((capital) => {
+        const button = document.createElement('button');
+        button.className = 'shape-choice-btn';
+        button.textContent = capital;
+        button.onclick = () => selectCapital(capital, button);
+        shapeCapitalChoices.appendChild(button);
     });
     
     updateProgress();
@@ -680,6 +710,44 @@ function getRandomCountries(exclude, count) {
     return shuffled.slice(0, count);
 }
 
+function getRandomCapitals(exclude, count) {
+    const available = capitals.filter(c => c.capital !== exclude);
+    const shuffled = shuffleArray(available);
+    return shuffled.slice(0, count).map(c => c.capital);
+}
+
+function selectCountry(country, button) {
+    // Clear previous selection
+    shapeCountryChoices.querySelectorAll('.shape-choice-btn').forEach(btn => {
+        btn.classList.remove('selected');
+    });
+    
+    // Mark new selection
+    button.classList.add('selected');
+    selectedCountry = country;
+    
+    // Show submit button if both are selected
+    if (selectedCountry && selectedCapital) {
+        shapeSubmitBtn.style.display = 'block';
+    }
+}
+
+function selectCapital(capital, button) {
+    // Clear previous selection
+    shapeCapitalChoices.querySelectorAll('.shape-choice-btn').forEach(btn => {
+        btn.classList.remove('selected');
+    });
+    
+    // Mark new selection
+    button.classList.add('selected');
+    selectedCapital = capital;
+    
+    // Show submit button if both are selected
+    if (selectedCountry && selectedCapital) {
+        shapeSubmitBtn.style.display = 'block';
+    }
+}
+
 function startShapeTimer() {
     shapeTimeLeft = 10;
     shapeTimerDisplay.textContent = shapeTimeLeft;
@@ -690,41 +758,66 @@ function startShapeTimer() {
         
         if (shapeTimeLeft === 0) {
             clearInterval(shapeTimerInterval);
-            // Auto-select no answer (wrong)
-            handleShapeChoice({code: 'none', capital: 'none'}, currentShapeAnswer);
+            // Auto-submit with current selections (or none)
+            submitShapeAnswer();
         }
     }, 1000);
 }
 
-function handleShapeChoice(selected, correct) {
+function submitShapeAnswer() {
     clearInterval(shapeTimerInterval);
     
     // Disable all buttons
-    const buttons = shapeChoicesGrid.querySelectorAll('.shape-choice-btn');
-    buttons.forEach(btn => {
+    shapeCountryChoices.querySelectorAll('.shape-choice-btn').forEach(btn => {
         btn.disabled = true;
         btn.onclick = null;
     });
+    shapeCapitalChoices.querySelectorAll('.shape-choice-btn').forEach(btn => {
+        btn.disabled = true;
+        btn.onclick = null;
+    });
+    shapeSubmitBtn.style.display = 'none';
     
-    // Find and mark the clicked button
-    buttons.forEach(btn => {
-        const buttonText = btn.innerText;
-        if (buttonText.includes(selected.capital)) {
-            if (selected.code === correct.code) {
-                btn.classList.add('correct');
-                correctCount++;
-            } else {
-                btn.classList.add('incorrect');
-                wrongCount++;
-            }
-        }
-        // Show the correct answer
-        if (buttonText.includes(correct.capital)) {
-            btn.classList.add('show-correct');
+    const countryCorrect = selectedCountry && selectedCountry.code === currentShapeAnswer.code;
+    const capitalCorrect = selectedCapital === currentShapeAnswer.capital;
+    
+    // Mark correct/incorrect choices
+    shapeCountryChoices.querySelectorAll('.shape-choice-btn').forEach(btn => {
+        const countryText = btn.innerText;
+        if (countryText.includes(currentShapeAnswer.country.split(' ').slice(1).join(' '))) {
+            btn.classList.add('correct');
+        } else if (btn.classList.contains('selected')) {
+            btn.classList.add('incorrect');
         }
     });
     
+    shapeCapitalChoices.querySelectorAll('.shape-choice-btn').forEach(btn => {
+        if (btn.textContent === currentShapeAnswer.capital) {
+            btn.classList.add('correct');
+        } else if (btn.classList.contains('selected')) {
+            btn.classList.add('incorrect');
+        }
+    });
+    
+    // Update score and show feedback
+    if (countryCorrect && capitalCorrect) {
+        correctCount++;
+        shapeFeedback.classList.add('correct');
+        shapeFeedbackText.textContent = `Richtig! ${currentShapeAnswer.country} - ${currentShapeAnswer.capital}`;
+    } else {
+        wrongCount++;
+        shapeFeedback.classList.add('incorrect');
+        if (!countryCorrect && !capitalCorrect) {
+            shapeFeedbackText.textContent = `Falsch! Es war ${currentShapeAnswer.country} - ${currentShapeAnswer.capital}`;
+        } else if (countryCorrect) {
+            shapeFeedbackText.textContent = `Teilweise richtig! Land: ✓, Hauptstadt: ✗ (${currentShapeAnswer.capital})`;
+        } else if (capitalCorrect) {
+            shapeFeedbackText.textContent = `Teilweise richtig! Land: ✗ (${currentShapeAnswer.country}), Hauptstadt: ✓`;
+        }
+    }
+    
     updateScores();
+    shapeFeedback.style.display = 'block';
     shapeNextBtn.style.display = 'block';
     startAutoProgressShape();
 }
